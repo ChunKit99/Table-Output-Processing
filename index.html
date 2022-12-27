@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV Tables</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+  </style>  
+</head>
+<body>
+  <table id="table"></table>
+  <br>
+  <table id="table2">
+    <tr>
+      <th>Category</th>
+      <th>Value</th>
+    </tr>
+  </table>
+  <script src="./PapaParse-5.0.2/papaparse.min.js"></script>
+  <script>
+    window.onload = function() {
+      // Fetch and process CSV data for id table
+      fetch('Table_Input.csv')
+        .then(response => response.text())
+        .then((csv) => {
+          const data = Papa.parse(csv).data;
+
+          // Build html table from data
+          const table = document.getElementById('table');
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.entries(row).forEach(([key, value]) => {
+              const td = document.createElement('td');
+              td.textContent = `${value}`;
+              tr.appendChild(td);
+            });
+            table.appendChild(tr);
+          });
+        });
+
+      // Fetch and process CSV data for id table2
+      fetch('Table_Input.csv')
+        .then(response => response.text())
+        .then((csv) => {
+          const data = Papa.parse(csv, {
+            header: true
+          }).data;
+
+          // Build html table from data
+          const table = document.getElementById('table2');
+          const rows = [
+            {
+              category: 'Alpha',
+              value: Number(data[4].Value) + Number(data[19].Value)
+            },
+            {
+              category: 'Beta',
+              value: Number(data[14].Value) / Number(data[6].Value)
+            },
+            {
+              category: 'Charlie',
+              value: Number(data[12].Value) * Number(data[11].Value)
+            }
+          ];
+          rows.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.entries(row).forEach(([key, value]) => {
+              const td = document.createElement('td');
+              td.textContent = value;
+              tr.appendChild(td);
+            });
+            table.appendChild(tr);
+          });
+        });
+    }
+  </script>
+</body>
+</html>  
